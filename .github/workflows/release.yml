@@ -1,0 +1,22 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  dockerhub-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Extract tag name
+        shell: bash
+        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
+        id: extract_tag
+      - name: "Log into registry"
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD}}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME}}" --password-stdin
+      - name: "Build containers"
+        run: ./build_containers.sh
+        env:
+          VERSION: ${{ steps.extract_tag.outputs.tag }}
