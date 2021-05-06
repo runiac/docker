@@ -31,6 +31,8 @@ RUN apk add bash \
     && apk add jq \
     && apk add curl \
     && apk add wget \
+    && apk add git \
+    && apk add openssh \
     && apk add ca-certificates \
     && rm -rf /var/cache/apk/*
 
