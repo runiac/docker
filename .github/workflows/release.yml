@@ -29,6 +29,6 @@ jobs:
       - name: "Log into registry"
         run: echo "${{ secrets.DOCKERHUB_PASSWORD}}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME}}" --password-stdin
       - name: "Build containers"
-        run: ./build_containers.sh
+        run: bash ./build_containers.sh
         env:
           VERSION: latest # ${{ steps.extract_tag.outputs.tag }}
