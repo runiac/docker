@@ -6,7 +6,7 @@ then
   VERSION=$(whoami)
 fi
 
-image_prefix="runiac/core:$VERSION-$cleanDir"
+image_prefix="runiac/deploy:$VERSION-$cleanDir"
 
 docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine/Dockerfile" -t "${image_prefix}alpine" --push . || exit 1
 docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-azure/Dockerfile" -t "${image_prefix}alpine-azure" --push . || exit 1

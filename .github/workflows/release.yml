@@ -39,5 +39,5 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: runiac/docker
+          repository: runiac/deploy
           short-description: ${{ github.event.repository.description }}
