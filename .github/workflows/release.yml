@@ -2,8 +2,6 @@ name: release
 
 on:
   push:
-    tags:
-      - "*"
 
 jobs:
   dockerhub-core:
@@ -29,4 +27,4 @@ jobs:
       - name: "Build containers"
         run: ./build_containers.sh
         env:
-          VERSION: ${{ steps.extract_tag.outputs.tag }}
+          VERSION: latest # ${{ steps.extract_tag.outputs.tag }}
