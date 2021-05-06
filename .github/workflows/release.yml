@@ -34,3 +34,9 @@ jobs:
         run: bash ./build_containers.sh
         env:
           VERSION: latest # ${{ steps.extract_tag.outputs.tag }}
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: peterevans/dockerhub-description
