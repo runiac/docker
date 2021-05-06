@@ -5,7 +5,7 @@ ARG https_proxy
 
 FROM runiac/core:latest-alpine
 
-ARG GCLOUD_CLI_VERSION=322.0.0
+ARG GCLOUD_CLI_VERSION=339.0.0
 ARG TARGETPLATFORM
 
 # install google cloud sdk
