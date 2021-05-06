@@ -5,6 +5,11 @@ FROM --platform=$TARGETPLATFORM golang:1.16-alpine as builder1
 ARG TARGETPLATFORM
 ARG RUNIAC_VERSION=0.0.4
 
+# Common tools
+RUN apk add curl \
+    && apk add ca-certificates \
+    && rm -rf /var/cache/apk/*
+
 # Grab from github release
 RUN curl -Lo core.zip "https://github.com/Optum/runiac/archive/refs/heads/main.zip" && \
     unzip core.zip && \
