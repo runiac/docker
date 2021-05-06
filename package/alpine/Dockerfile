@@ -26,7 +26,7 @@ ARG TERRAFORM_VERSION=0.15.1
 
 RUN apk update
 
-# Common tools
+# Common tools, git+openssh for terraform
 RUN apk add bash \
     && apk add jq \
     && apk add curl \
