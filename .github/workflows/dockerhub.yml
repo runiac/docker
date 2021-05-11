@@ -1,11 +1,15 @@
-name: release
+name: dockerhub
 
 on:
-  push:
-    tags:
-      - "*"
-    branches:
-      - "main"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Version being targeted (heads/main for latest or tags/version for versioned release)"
+        required: true
+        default: "refs/heads/main"
+  # push:
+  #   branches:
+  #     - "main"
 
 jobs:
   dockerhub-core:
@@ -24,16 +28,12 @@ jobs:
           echo "Status:    ${{ steps.buildx.outputs.status }}"
           echo "Flags:     ${{ steps.buildx.outputs.flags }}"
           echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
-      - name: Extract tag name
-        shell: bash
-        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
-        id: extract_tag
       - name: "Log into registry"
         run: echo "${{ secrets.DOCKERHUB_PASSWORD}}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME}}" --password-stdin
       - name: "Build containers"
         run: bash ./build_containers.sh
         env:
-          VERSION: latest # ${{ steps.extract_tag.outputs.tag }}
+          REF: ${{ github.event.inputs.ref }}
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
         with:

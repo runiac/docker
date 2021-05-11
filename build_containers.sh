@@ -1,16 +1,22 @@
 #!/bin/bash
 
 # if version not set, set to local default
-if [ -z "$VERSION"  ]
-then
+if [[ "$REF" == "refs/heads/main" ]]; then
+  VERSION="latest"
+elif  [[ "$REF" =~ refs/tags/* ]]; then  
+  VERSION=$(echo ${REF#refs/tags/})
+else
   VERSION=$(whoami)
+  REF='refs/heads/main'
 fi
 
-image_prefix="runiac/deploy:$VERSION-$cleanDir"
+image_prefix="runiac/deploy:$VERSION-"
 
-docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine/Dockerfile" -t "${image_prefix}alpine" --push . || exit 1
+echo $image_prefix
+
+docker buildx build --build-arg RUNIAC_REF=$REF --platform linux/arm64,linux/amd64 -f "package/alpine/Dockerfile" -t "${image_prefix}alpine" --push . || exit 1
 docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-azure/Dockerfile" -t "${image_prefix}alpine-azure" --push . || exit 1
-docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-full/Dockerfile" -t "${image_prefix}alpine-full" --push . || exit 1 &
-docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-gcp/Dockerfile" -t "${image_prefix}alpine-gcp" --push . || exit 1 &
+docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-full/Dockerfile" -t "${image_prefix}alpine-full" --push . &
+docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-gcp/Dockerfile" -t "${image_prefix}alpine-gcp" --push . &
 
 wait

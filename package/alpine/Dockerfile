@@ -2,8 +2,8 @@
 
 FROM --platform=$TARGETPLATFORM golang:1.16-alpine as builder1
 
+ARG RUNIAC_REF="refs/heads/main"
 ARG TARGETPLATFORM
-ARG RUNIAC_VERSION=0.0.4
 
 # Common tools
 RUN apk add curl \
@@ -11,7 +11,7 @@ RUN apk add curl \
     && rm -rf /var/cache/apk/*
 
 # Grab from github release
-RUN curl -Lo core.zip "https://github.com/Optum/runiac/archive/refs/heads/main.zip" && \
+RUN curl -Lo core.zip "https://github.com/Optum/runiac/archive/${RUNIAC_REF}.zip" && \
     unzip core.zip && \
     rm -f core.zip && \
     cd runiac-main/cmd/runiac/ && \
