@@ -3,7 +3,7 @@
 ARG http_proxy
 ARG https_proxy
 
-FROM runiac/core:latest-alpine
+FROM runiac/deploy:latest-alpine
 
 ARG AZURE_CLI_VERSION=2.13.0
 
