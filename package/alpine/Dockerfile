@@ -14,8 +14,9 @@ RUN apk add curl \
 RUN curl -Lo core.zip "https://github.com/Optum/runiac/archive/${RUNIAC_REF}.zip" && \
     unzip core.zip && \
     rm -f core.zip && \
-    cd runiac-main/cmd/runiac/ && \
-    go install
+    ls -al && \
+    cd runiac-*/cmd/runiac/ && \
+    go install 
 
 # default to the build platforms image, and not the target platform image
 # since this is a temp image stage, we should avoid qemu for the binary download
