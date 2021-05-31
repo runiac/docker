@@ -8,6 +8,8 @@ FROM runiac/deploy:latest-alpine
 ARG GCLOUD_CLI_VERSION=339.0.0
 ARG TARGETPLATFORM
 
+RUN apk add python3
+
 # install google cloud sdk
 RUN case ${TARGETPLATFORM} in \
          "linux/amd64")  GCLOUD_ARCH=linux-x86_64  ;; \
