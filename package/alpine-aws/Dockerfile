@@ -5,7 +5,7 @@ ARG https_proxy
 
 FROM python:3-alpine3.13 AS builder
 
-ENV AWSCLI_VERSION=2.2.0
+ENV AWSCLI_VERSION=2.2.7
 
 RUN apk add --no-cache \
     gcc \
@@ -16,7 +16,8 @@ RUN apk add --no-cache \
     py3-pip \
     zlib-dev \
     make \
-    cmake
+    cmake \
+    perl
 
 RUN git clone --recursive  --depth 1 --branch ${AWSCLI_VERSION} --single-branch https://github.com/aws/aws-cli.git
 
