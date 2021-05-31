@@ -2,7 +2,7 @@
 
 ## alpine-full (kitchen sink)
 
-This is the default container for runiac and is configured to handle most cloud deployments to Azure or GCP.
+This is the default container for runiac and is configured to handle most cloud deployments to Azure, GCP and AWS.
 
 - Terraform
 - Runiac
