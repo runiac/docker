@@ -18,6 +18,15 @@ A lightweight container with no cloud specific SDKs
 - Runiac
 - Bash, wget, curl, jq, ca-certs
 
+## alpine-aws
+
+An AWS optimized container
+
+- Terraform
+- Runiac
+- AWS CLI v2
+- Bash, wget, curl, jq, ca-certs
+
 ## alpine-azure
 
 An azure optimized container

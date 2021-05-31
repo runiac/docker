@@ -19,4 +19,7 @@ docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-azure/
 docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-full/Dockerfile" -t "${image_prefix}alpine-full" --push . &
 docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-gcp/Dockerfile" -t "${image_prefix}alpine-gcp" --push . &
 
+# TODO: see if we can add support for ARM here as well
+docker buildx build --platform linux/amd64 -f "package/alpine-aws/Dockerfile" -t "${image_prefix}alpine-aws" --push . &
+
 wait
