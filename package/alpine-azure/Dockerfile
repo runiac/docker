@@ -5,7 +5,7 @@ ARG https_proxy
 
 FROM runiac/deploy:latest-alpine
 
-ARG AZURE_CLI_VERSION=2.13.0
+ARG AZURE_CLI_VERSION=2.26.1
 
 # install azure cli
 RUN \
