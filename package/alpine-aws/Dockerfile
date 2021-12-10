@@ -3,52 +3,33 @@
 ARG http_proxy
 ARG https_proxy
 
-# https://github.com/aws/aws-cli/issues/4685#issuecomment-829600284
-FROM python:3-alpine3.13 AS installer
-
-ENV AWSCLI_VERSION=2.2.0
-
-RUN apk add --no-cache \
-    gcc \
-    git \
-    libc-dev \
-    libffi-dev \
-    openssl-dev \
-    py3-pip \
-    zlib-dev \
-    make \
-    cmake
-
-RUN git clone --recursive  --depth 1 --branch ${AWSCLI_VERSION} --single-branch https://github.com/aws/aws-cli.git
-
-WORKDIR /aws-cli
-
-# Follow https://github.com/six8/pyinstaller-alpine to install pyinstaller on alpine
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir pycrypto \
-    && git clone --depth 1 --single-branch --branch v$(grep PyInstaller requirements-build.txt | cut -d'=' -f3) https://github.com/pyinstaller/pyinstaller.git /tmp/pyinstaller \
-    && cd /tmp/pyinstaller/bootloader \
-    && CFLAGS="-Wno-stringop-overflow -Wno-stringop-truncation" python ./waf configure --no-lsb all \
-    && pip install .. \
-    && rm -Rf /tmp/pyinstaller \
-    && cd - \
-    && boto_ver=$(grep botocore setup.cfg | cut -d'=' -f3) \
-    && git clone --single-branch --branch v2 https://github.com/boto/botocore /tmp/botocore \
-    && cd /tmp/botocore \
-    && git checkout $(git log --grep $boto_ver --pretty=format:"%h") \
-    && pip install . \
-    && rm -Rf /tmp/botocore  \
-    && cd -
-
-RUN sed -i '/botocore/d' requirements.txt \
-    && scripts/installers/make-exe
-
-RUN unzip dist/awscli-exe.zip \
-    && ./aws/install --bin-dir /aws-cli-bin
-
+# https://github.com/aws/aws-cli/issues/4685#issuecomment-941927371
 FROM runiac/deploy:latest-alpine AS runner
 
-RUN apk --no-cache add groff
+ENV AWSCLI_VERSION=2.4.5
+ENV GLIBC_VER=2.34-r0
 
-COPY --from=installer /usr/local/aws-cli/ /usr/local/aws-cli/
-COPY --from=installer /aws-cli-bin/ /usr/local/bin/
+RUN apk add --update --no-cache \
+  groff
+
+RUN apk add --no-cache --virtual .dependencies binutils curl \
+    && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
+    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk \
+    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-bin-${GLIBC_VER}.apk \
+    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-i18n-${GLIBC_VER}.apk \
+    && apk add --no-cache --virtual .glibc \
+        glibc-${GLIBC_VER}.apk \
+        glibc-bin-${GLIBC_VER}.apk \
+        glibc-i18n-${GLIBC_VER}.apk \
+    && /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 \
+    && curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip -o awscliv2.zip \
+    && unzip awscliv2.zip \
+    && aws/install \
+    && rm -rf \
+        awscliv2.zip \
+        aws \
+        /usr/local/aws-cli/v2/*/dist/aws_completer \
+        /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
+        /usr/local/aws-cli/v2/*/dist/awscli/examples \
+        glibc-*.apk \
+    && apk del --purge .dependencies
