@@ -3,9 +3,10 @@
 ARG http_proxy
 ARG https_proxy
 
-FROM python:3-alpine3.13 AS builder
+# https://github.com/aws/aws-cli/issues/4685#issuecomment-829600284
+FROM python:3-alpine3.13 AS installer
 
-ENV AWSCLI_VERSION=2.2.7
+ENV AWSCLI_VERSION=2.2.0
 
 RUN apk add --no-cache \
     gcc \
@@ -16,8 +17,7 @@ RUN apk add --no-cache \
     py3-pip \
     zlib-dev \
     make \
-    cmake \
-    perl
+    cmake
 
 RUN git clone --recursive  --depth 1 --branch ${AWSCLI_VERSION} --single-branch https://github.com/aws/aws-cli.git
 
@@ -43,12 +43,12 @@ RUN pip install --no-cache-dir --upgrade pip \
 RUN sed -i '/botocore/d' requirements.txt \
     && scripts/installers/make-exe
 
-RUN unzip dist/awscli-exe.zip && \
-    ./aws/install --bin-dir /aws-cli-bin
+RUN unzip dist/awscli-exe.zip \
+    && ./aws/install --bin-dir /aws-cli-bin
 
 FROM runiac/deploy:latest-alpine AS runner
 
 RUN apk --no-cache add groff
 
-COPY --from=builder /usr/local/aws-cli/ /usr/local/aws-cli/
-COPY --from=builder /aws-cli-bin/ /usr/local/bin/
+COPY --from=installer /usr/local/aws-cli/ /usr/local/aws-cli/
+COPY --from=installer /aws-cli-bin/ /usr/local/bin/
