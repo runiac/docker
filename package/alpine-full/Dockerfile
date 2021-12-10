@@ -5,7 +5,7 @@ ARG https_proxy
 
 FROM runiac/deploy:latest-alpine-aws
 
-ARG AZURE_CLI_VERSION=2.30.0
+ARG AZURE_CLI_VERSION=2.31.0
 ARG GCLOUD_CLI_VERSION=339.0.0
 ARG TARGETPLATFORM
 
@@ -13,8 +13,9 @@ ARG TARGETPLATFORM
 RUN \
     apk update && \
     apk add --no-cache curl tar openssl sudo bash jq python3 py-pip && \
-    apk add --virtual=build gcc libffi-dev musl-dev openssl-dev make python3-dev && \
-    python3 -m pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION} && \
+    apk add --virtual=build gcc libffi-dev musl-dev openssl-dev make python3-dev
+
+RUN python3 -m pip install --upgrade pip  && python3 -m pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION} && \
     apk del --purge build
 
 # install google cloud sdk
