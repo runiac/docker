@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:experimental
 
-FROM --platform=$TARGETPLATFORM golang:1.16-alpine as builder1
+FROM --platform=$TARGETPLATFORM golang:1.17-alpine as builder1
 
 ARG RUNIAC_REF="refs/heads/main"
 ARG TARGETPLATFORM
