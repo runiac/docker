@@ -21,7 +21,7 @@ RUN curl -Lo core.zip "https://github.com/Optum/runiac/archive/${RUNIAC_REF}.zip
 # default to the build platforms image, and not the target platform image
 # since this is a temp image stage, we should avoid qemu for the binary download
 # and only pull the alpine image once
-FROM alpine
+FROM alpine:3.18.3
 
 ARG TERRAFORM_VERSION=0.15.1
 
