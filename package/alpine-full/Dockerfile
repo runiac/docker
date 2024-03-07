@@ -5,7 +5,7 @@ ARG https_proxy
 
 ARG AZURE_CLI_VERSION=2.58.0
 
-FROM docker.repo1.uhc.com/azure-cli:${AZURE_CLI_VERSION} AS azurecli
+FROM mcr.microsoft.com/azure-cli:${AZURE_CLI_VERSION} AS azurecli
 
 # Remove jp installed on the azure-cli base image since it has critical vulnerabilities
 RUN rm -rf /usr/local/bin/jp || true
