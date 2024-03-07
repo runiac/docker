@@ -3,33 +3,27 @@
 ARG http_proxy
 ARG https_proxy
 
-# https://github.com/aws/aws-cli/issues/4685#issuecomment-941927371
-FROM runiac/deploy:latest-alpine AS runner
+FROM python:3.11-alpine3.19 as builder
 
-ENV AWSCLI_VERSION=2.4.5
-ENV GLIBC_VER=2.34-r0
+ENV AWSCLI_VERSION=2.15.0
 
-RUN apk add --update --no-cache \
-  groff
+RUN apk add --no-cache git unzip groff build-base libffi-dev cmake
+RUN git clone --single-branch --depth 1 -b ${AWSCLI_VERSION} https://github.com/aws/aws-cli.git
 
-RUN apk add --no-cache --virtual .dependencies binutils curl \
-    && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-bin-${GLIBC_VER}.apk \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-i18n-${GLIBC_VER}.apk \
-    && apk add --no-cache --virtual .glibc \
-        glibc-${GLIBC_VER}.apk \
-        glibc-bin-${GLIBC_VER}.apk \
-        glibc-i18n-${GLIBC_VER}.apk \
-    && /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 \
-    && curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip -o awscliv2.zip \
-    && unzip awscliv2.zip \
-    && aws/install \
-    && rm -rf \
-        awscliv2.zip \
-        aws \
-        /usr/local/aws-cli/v2/*/dist/aws_completer \
-        /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
-        /usr/local/aws-cli/v2/*/dist/awscli/examples \
-        glibc-*.apk \
-    && apk del --purge .dependencies
+WORKDIR /aws-cli
+RUN ./configure --with-install-type=portable-exe --with-download-deps
+RUN make
+RUN make install
+
+# reduce image size: remove examples
+RUN rm -rf \
+    /usr/local/lib/aws-cli/awscli/data/ac.index \
+    /usr/local/lib/aws-cli/awscli/examples
+RUN find /usr/local/lib/aws-cli/awscli/data -name completions-1*.json -delete
+RUN find /usr/local/lib/aws-cli/awscli/botocore/data -name examples-1.json -delete
+RUN (cd /usr/local/lib/aws-cli; for a in *.so*; do test -f /lib/$a && rm $a; done)
+
+# build the final image
+FROM runiac/deploy:latest-alpine
+COPY --from=builder /usr/local/lib/aws-cli/ /usr/local/lib/aws-cli/
+RUN ln -s /usr/local/lib/aws-cli/aws /usr/local/bin/aws
