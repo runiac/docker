@@ -24,6 +24,8 @@ RUN apk update && \
     apk add --virtual=build libffi-dev
 
 # install google cloud sdk
+RUN apk add python3
+
 RUN case ${TARGETPLATFORM} in \
          "linux/amd64")  GCLOUD_ARCH=linux-x86_64  ;; \
          "linux/arm64")  GCLOUD_ARCH=darwin-arm  ;; \
