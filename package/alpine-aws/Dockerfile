@@ -24,6 +24,6 @@ RUN find /usr/local/lib/aws-cli/awscli/botocore/data -name examples-1.json -dele
 RUN (cd /usr/local/lib/aws-cli; for a in *.so*; do test -f /lib/$a && rm $a; done)
 
 # build the final image
-FROM runiac/deploy:latest-alpine
+FROM runiac/deploy:${RUNIAC_TAG}-alpine
 COPY --from=builder /usr/local/lib/aws-cli/ /usr/local/lib/aws-cli/
 RUN ln -s /usr/local/lib/aws-cli/aws /usr/local/bin/aws

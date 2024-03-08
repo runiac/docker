@@ -3,7 +3,7 @@
 ARG http_proxy
 ARG https_proxy
 
-FROM runiac/deploy:latest-alpine
+FROM runiac/deploy:${RUNIAC_TAG}-alpine
 
 ARG GCLOUD_CLI_VERSION=467.0.0
 ARG TARGETPLATFORM

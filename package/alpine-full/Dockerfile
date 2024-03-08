@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/azure-cli:${AZURE_CLI_VERSION} AS azurecli
 # Remove jp installed on the azure-cli base image since it has critical vulnerabilities
 RUN rm -rf /usr/local/bin/jp || true
 
-FROM runiac/deploy:latest-alpine-aws
+FROM runiac/deploy:${RUNIAC_TAG}-alpine-aws
 
 ARG GCLOUD_CLI_VERSION=467.0.0
 ARG TARGETPLATFORM
