@@ -2,15 +2,19 @@
 
 ARG http_proxy
 ARG https_proxy
+ARG RUNIAC_TAG
 
-FROM runiac/deploy:latest-alpine
+ARG AZURE_CLI_VERSION=2.58.0
 
-ARG AZURE_CLI_VERSION=2.31.0
+FROM mcr.microsoft.com/azure-cli:${AZURE_CLI_VERSION} AS azurecli
 
-# install azure cli
+# Remove jp installed on the azure-cli base image since it has critical vulnerabilities
+RUN rm -rf /usr/local/bin/jp || true
+
+FROM runiac/deploy:${RUNIAC_TAG}-alpine
+COPY --from=azurecli /usr/local/bin/ /usr/local/bin/
+COPY --from=azurecli /usr/local/lib/ /usr/local/lib/
+
 RUN apk update && \
-    apk add --no-cache curl tar openssl sudo bash jq python3 py-pip && \
-    apk add --virtual=build gcc libffi-dev musl-dev openssl-dev make python3-dev
-
-RUN python3 -m pip install --upgrade pip && python3 -m pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION} && \
-    apk del --purge build
+    apk add --no-cache openssl sudo bash jq && \
+    apk add --virtual=build libffi-dev

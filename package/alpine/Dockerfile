@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:experimental
 
-FROM --platform=$TARGETPLATFORM golang:1.17-alpine as builder1
+FROM --platform=$TARGETPLATFORM golang:1.22.1-alpine as builder1
 
 ARG RUNIAC_REF="refs/heads/main"
 ARG TARGETPLATFORM
@@ -21,9 +21,9 @@ RUN curl -Lo core.zip "https://github.com/Optum/runiac/archive/${RUNIAC_REF}.zip
 # default to the build platforms image, and not the target platform image
 # since this is a temp image stage, we should avoid qemu for the binary download
 # and only pull the alpine image once
-FROM alpine:3.18.6
+FROM alpine:3.19
 
-ARG TERRAFORM_VERSION=0.15.1
+ARG TERRAFORM_VERSION=1.7.4
 
 RUN apk update
 

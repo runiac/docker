@@ -2,10 +2,11 @@
 
 ARG http_proxy
 ARG https_proxy
+ARG RUNIAC_TAG
 
-FROM runiac/deploy:latest-alpine
+FROM runiac/deploy:${RUNIAC_TAG}-alpine
 
-ARG GCLOUD_CLI_VERSION=339.0.0
+ARG GCLOUD_CLI_VERSION=467.0.0
 ARG TARGETPLATFORM
 
 RUN apk add python3
