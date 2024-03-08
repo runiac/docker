@@ -6,16 +6,12 @@ push_containers () {
 
     if [[ "$TYPE" == "core" ]]; then 
       docker buildx build --build-arg RUNIAC_REF=$REF --platform linux/arm64,linux/amd64 -f "package/alpine/Dockerfile" -t "${image_prefix}alpine" $2  . || exit 1
-    fi
     elif [[ "$TYPE" == "aws" ]]; then 
       docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-aws/Dockerfile" -t "${image_prefix}alpine-aws" $2  .
-    fi
     elif [[ "$TYPE" == "azure" ]]; then 
       docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-azure/Dockerfile" -t "${image_prefix}alpine-azure" $2 .
-    fi
     elif [[ "$TYPE" == "gcp" ]]; then 
       docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-gcp/Dockerfile" -t "${image_prefix}alpine-gcp" $2 .
-    fi
     elif [[ "$TYPE" == "full" ]]; then 
       docker buildx build --platform linux/arm64,linux/amd64 -f "package/alpine-full/Dockerfile" -t "${image_prefix}alpine-full" $2 .
     fi
