@@ -2,6 +2,7 @@
 
 ARG http_proxy
 ARG https_proxy
+ARG RUNIAC_TAG
 
 FROM runiac/deploy:${RUNIAC_TAG}-alpine
 

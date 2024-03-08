@@ -2,6 +2,7 @@
 
 ARG http_proxy
 ARG https_proxy
+ARG RUNIAC_TAG
 
 ARG AZURE_CLI_VERSION=2.58.0
 
