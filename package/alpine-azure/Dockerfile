@@ -15,5 +15,5 @@ COPY --from=azurecli /usr/local/bin/ /usr/local/bin/
 COPY --from=azurecli /usr/local/lib/ /usr/local/lib/
 
 RUN apk update && \
-    apk add --no-cache tar openssl sudo bash && \
+    apk add --no-cache openssl sudo bash jq && \
     apk add --virtual=build libffi-dev
