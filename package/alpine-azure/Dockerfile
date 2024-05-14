@@ -18,3 +18,5 @@ COPY --from=azurecli /usr/local/lib/ /usr/local/lib/
 RUN apk update && \
     apk add --no-cache openssl sudo bash jq && \
     apk add --virtual=build libffi-dev
+
+RUN az aks install-cli
