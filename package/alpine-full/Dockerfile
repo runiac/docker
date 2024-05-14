@@ -4,7 +4,9 @@ ARG http_proxy
 ARG https_proxy
 ARG RUNIAC_TAG
 
-ARG AZURE_CLI_VERSION=2.58.0
+ARG AZURE_CLI_VERSION=2.60.0
+ARG KUBECTL_VERSION=0.30.0
+ARG KUBELOGIN_VERSION=0.1.3
 
 FROM mcr.microsoft.com/azure-cli:${AZURE_CLI_VERSION} AS azurecli
 
@@ -23,6 +25,8 @@ COPY --from=azurecli /usr/local/lib/ /usr/local/lib/
 RUN apk update && \
     apk add --no-cache tar openssl sudo bash && \
     apk add --virtual=build libffi-dev
+
+RUN az aks install-cli
 
 # install google cloud sdk
 RUN apk add python3
