@@ -21,4 +21,4 @@ RUN apk update && \
     apk add --no-cache openssl sudo bash jq && \
     apk add --virtual=build libffi-dev
 
-RUN az aks install-cli --client-version $KUBECTL_VERSION --kubelogin-version $KUBELOGIN_VERSION
+RUN az aks install-cli
