@@ -24,6 +24,8 @@ RUN apk update && \
     apk add --no-cache tar openssl sudo bash && \
     apk add --virtual=build libffi-dev
 
+RUN az aks install-cli
+
 # install google cloud sdk
 RUN apk add python3
 
