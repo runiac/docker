@@ -20,3 +20,5 @@ RUN apk update && \
     apk add --virtual=build libffi-dev
 
 RUN az aks install-cli
+
+RUN kubelogin -h
