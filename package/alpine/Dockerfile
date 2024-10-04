@@ -23,7 +23,7 @@ RUN curl -Lo core.zip "https://github.com/Optum/runiac/archive/${RUNIAC_REF}.zip
 # and only pull the alpine image once
 FROM alpine:3.19
 
-ARG TERRAFORM_VERSION=1.7.4
+ARG TERRAFORM_VERSION=1.9.7
 
 RUN apk update
 
