@@ -4,7 +4,7 @@ ARG http_proxy
 ARG https_proxy
 ARG RUNIAC_TAG
 
-ARG AZURE_CLI_VERSION=2.60.0
+ARG AZURE_CLI_VERSION=2.62.0
 ARG KUBECTL_VERSION=0.30.0
 ARG KUBELOGIN_VERSION=0.1.3
 
@@ -15,7 +15,7 @@ RUN rm -rf /usr/local/bin/jp || true
 
 FROM runiac/deploy:${RUNIAC_TAG}-alpine-aws
 
-ARG GCLOUD_CLI_VERSION=467.0.0
+ARG GCLOUD_CLI_VERSION=558.0.0
 ARG TARGETPLATFORM
 
 # install azure cli
