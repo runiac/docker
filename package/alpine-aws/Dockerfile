@@ -4,7 +4,7 @@ ARG http_proxy
 ARG https_proxy
 ARG RUNIAC_TAG
 
-FROM python:3.11-alpine3.22 as builder
+FROM python:3.11-alpine3.20 as builder
 
 ENV AWSCLI_VERSION=2.24.0
 
