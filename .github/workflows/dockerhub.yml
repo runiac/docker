@@ -97,7 +97,7 @@ jobs:
           TYPE: full
           GITHUB_EVENT: ${{ github.event_name }}
       - name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
+        uses: peter-evans/dockerhub-description@v4
         if: ${{ github.event_name == 'workflow_dispatch' }}
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
