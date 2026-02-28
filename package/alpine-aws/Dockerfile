@@ -4,9 +4,9 @@ ARG http_proxy
 ARG https_proxy
 ARG RUNIAC_TAG
 
-FROM python:3.11-alpine3.19 as builder
+FROM python:3.11-alpine3.22 as builder
 
-ENV AWSCLI_VERSION=2.15.0
+ENV AWSCLI_VERSION=2.24.0
 
 RUN apk add --no-cache git unzip groff build-base libffi-dev cmake
 RUN git clone --single-branch --depth 1 -b ${AWSCLI_VERSION} https://github.com/aws/aws-cli.git
